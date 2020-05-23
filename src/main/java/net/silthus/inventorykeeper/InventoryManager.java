@@ -56,7 +56,7 @@ public class InventoryManager {
                     break;
             }
             filter.load(value);
-            getPlugin().getLogger().info("loaded " + value.getMode() + " filter with permission: " + permission);
+            getPlugin().getLogger().info("loaded " + key + value.getMode() + " filter with permission: " + permission);
         });
     }
 

@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/Silthus/sInventoryKeeper/compare/v1.0.1...v1.0.2) (2020-05-23)
+
+
+### Bug Fixes
+
+* **permission:** change permission prefix to `sinventorykeeper.config.` ([8e81049](https://github.com/Silthus/sInventoryKeeper/commit/8e81049720ef5af4bdb04d17663880e3f2a57a90))
+
 ## [1.0.1](https://github.com/Silthus/sInventoryKeeper/compare/v1.0.0...v1.0.1) (2020-05-23)
 
 

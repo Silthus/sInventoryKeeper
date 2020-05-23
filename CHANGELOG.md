@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/Silthus/sInventoryKeeper/compare/v1.0.0...v1.0.1) (2020-05-23)
+
+
+### Bug Fixes
+
+* **release:** do not publish shadowJar ([7630a74](https://github.com/Silthus/sInventoryKeeper/commit/7630a7444d11c80f7d4b0f88722b83c861133c9c))
+
 # 1.0.0 (2020-05-23)
 
 

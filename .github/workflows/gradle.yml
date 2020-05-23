@@ -72,9 +72,8 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Release
-        run: |
-          yarn install
-          yarn semantic-release
+      - uses: codfish/semantic-release-action@master
+        name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      

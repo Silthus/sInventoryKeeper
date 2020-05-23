@@ -1,3 +1,10 @@
+# 1.0.0 (2020-05-23)
+
+
+### Features
+
+* initial commit ([d321b91](https://github.com/Silthus/sInventoryKeeper/commit/d321b91d2cc7fcc2411f1281c67969f8565b2587))
+
 ### Initial Features
 
 * definable item groups inside `item-groups`

@@ -59,8 +59,17 @@ repositories {
     }
 
     maven {
-        name = 'github'
-        url = 'https://maven.pkg.github.com/Silthus'
+        name = 'slib'
+        url = 'https://maven.pkg.github.com/silthus/slib'
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+            password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
+
+    maven {
+        name = 'configlib'
+        url = 'https://maven.pkg.github.com/silthus/configlib'
         credentials {
             username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
             password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
@@ -81,8 +90,11 @@ dependencies {
     compileOnly "org.spigotmc:spigot-api:${mcVersion}-R0.1-SNAPSHOT"
 
     //Add dependencies here
+    implementation 'net.silthus:slib:1.0.4'
+    implementation 'de.exlll:configlib-bukkit:2.6.0'
 
     //Test dependencies
+    testImplementation 'com.google.jimfs:jimfs:1.1'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.6.2'
     testImplementation "org.mockito:mockito-core:3.+"
     testImplementation 'com.github.seeseemelk:MockBukkit-v1.15:0.3.0-SNAPSHOT'
@@ -91,33 +103,26 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
 }
 
-test {
-    useJUnitPlatform()
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
-    ignoreFailures = true
-}
-
-test {
-    useJUnitPlatform()
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
-    ignoreFailures = true
-}
-
 shadowJar {
     classifier = ''
-//    dependencies {
-//        include(dependency('co.aikar:acf-paper:0.5.0-SNAPSHOT'))
-//    }
-//    relocate 'co.aikar.commands', "${packageName}.acf"
-//    relocate 'co.aikar.locales', "${packageName}.locales"
+    dependencies {
+        include(dependency('net.silthus:slib:'))
+        include(dependency('de.exlll:configlib-bukkit:'))
+    }
+    relocate 'net.silthus.slib', "${packageName}.slib"
+    relocate 'de.exlll.configlib', "${packageName}.configlib"
 }
 
 tasks.build.dependsOn(shadowJar)
 tasks.publish.dependsOn(shadowJar)
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    ignoreFailures = false
+}
 
 processResources {
     project.properties.put("version", this.version)
@@ -132,8 +137,10 @@ task cleanPlugin() {
 
 task copyPluginYaml(type: Copy, dependsOn: spigotPluginYaml) {
     from(new File(spigotPluginYaml.temporaryDir, "plugin.yml"))
-    into(sourceSets.main.resources.srcDirs[0])
+    into(sourceSets.test.resources.srcDirs[0])
 }
+
+tasks.test.dependsOn(copyPluginYaml)
 
 task deploy(type: Copy, dependsOn: [
     'cleanPlugin',

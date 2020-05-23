@@ -1,0 +1,12 @@
+# >ou can define two different modes that will control how this config gets loaded.
+# Allowed values (case sensitive): WHITELIST or BLACKLIST
+# WHITELIST: only the defined items are kept
+# BLACKLIST: all items excluding the defined items are kept
+mode: WHITELIST
+# Set this to false if you want to disable the config.
+enabled: true
+# Define a list of item groups that should be kept or dropped (depending on the mode).
+# You can create custom item groups inside the item-groups/ folder.
+item_groups: []
+# Define a list of items that should be kept or dropped (depending on the mode).
+items: []

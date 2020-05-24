@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/Silthus/sInventoryKeeper/compare/v1.0.3...v1.0.4) (2020-05-24)
+
+
+### Bug Fixes
+
+* **release:** set GH_URL to set github api url ([eaec5f3](https://github.com/Silthus/sInventoryKeeper/commit/eaec5f3b008f787eba078df8a55f509043bdc6a6))
+
 ## [1.0.3](https://github.com/Silthus/sInventoryKeeper/compare/v1.0.2...v1.0.3) (2020-05-23)
 
 

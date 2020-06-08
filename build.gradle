@@ -31,7 +31,7 @@ spigot {
     authors = [project.property("author")]
     apiVersion = project.property("apiVersion")
     load = STARTUP
-    //    depends = ['']
+    depends = ['sLib']
 }
 
 compileJava {
@@ -47,6 +47,8 @@ repositories {
     mavenLocal()
     mavenCentral()
     jcenter()
+
+    maven { url 'https://jitpack.io' }
 
     //Added spigot repository
     maven {
@@ -91,31 +93,26 @@ dependencies {
     compileOnly "org.spigotmc:spigot-api:${mcVersion}-R0.1-SNAPSHOT"
 
     //Add dependencies here
-    implementation 'net.silthus:slib:1.0.4'
-    implementation 'de.exlll:configlib-bukkit:2.6.0'
+    implementation 'net.silthus:slib:1.2.4'
 
     //Test dependencies
     testImplementation 'com.google.jimfs:jimfs:1.1'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.6.2'
     testImplementation "org.mockito:mockito-core:3.+"
-    testImplementation 'com.github.seeseemelk:MockBukkit-v1.15:0.3.0-SNAPSHOT'
+    testImplementation 'com.github.seeseemelk:MockBukkit:v1.15-SNAPSHOT'
     testImplementation 'org.assertj:assertj-core:3.16.1'
     testImplementation 'org.projectlombok:lombok:1.18.12'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
 }
 
-shadowJar {
-    classifier = ''
-    dependencies {
-        include(dependency('net.silthus:slib:'))
-        include(dependency('de.exlll:configlib-bukkit:'))
-    }
-    relocate 'net.silthus.slib', "${packageName}.slib"
-    relocate 'de.exlll.configlib', "${packageName}.configlib"
-}
-
-tasks.build.dependsOn(shadowJar)
-tasks.publish.dependsOn(shadowJar)
+//shadowJar {
+//    classifier = ''
+//    dependencies {
+//    }
+//}
+//
+//tasks.build.dependsOn(shadowJar)
+//tasks.publish.dependsOn(shadowJar)
 
 test {
     useJUnitPlatform()

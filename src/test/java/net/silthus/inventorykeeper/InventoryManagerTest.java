@@ -2,16 +2,19 @@ package net.silthus.inventorykeeper;
 
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
+import com.google.inject.Provider;
 import net.silthus.inventorykeeper.api.FilterMode;
 import net.silthus.inventorykeeper.config.InventoryConfig;
 import net.silthus.inventorykeeper.config.ItemGroupConfig;
 import net.silthus.inventorykeeper.filter.BlacklistInventoryFilter;
 import net.silthus.inventorykeeper.filter.WhitelistInventoryFilter;
+import net.silthus.inventorykeeper.mock.CustomServerMock;
 import org.apache.commons.lang.RandomStringUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.*;
+import org.mockito.Mockito;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,6 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @DisplayName("InventoryManager")
 public class InventoryManagerTest {
@@ -30,7 +35,7 @@ public class InventoryManagerTest {
 
     @BeforeAll
     public static void beforeAll() {
-        server = MockBukkit.mock();
+        server = MockBukkit.mock(new CustomServerMock());
         plugin = MockBukkit.loadWith(SKeepInventory.class, new File("src/test/resources/plugin.yml"));
     }
 
@@ -41,7 +46,11 @@ public class InventoryManagerTest {
 
     @BeforeEach
     public void beforeEach() {
-        manager = new InventoryManager(plugin);
+        Provider<WhitelistInventoryFilter> whitelistFilter = (Provider<WhitelistInventoryFilter>) mock(Provider.class);
+        Provider<BlacklistInventoryFilter> blacklistFilter = (Provider<BlacklistInventoryFilter>) mock(Provider.class);
+        manager = new InventoryManager(plugin, whitelistFilter, blacklistFilter);
+        when(whitelistFilter.get()).thenReturn(new WhitelistInventoryFilter(manager));
+        when(blacklistFilter.get()).thenReturn(new BlacklistInventoryFilter(manager));
     }
 
     @Nested

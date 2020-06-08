@@ -105,15 +105,6 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
 }
 
-//shadowJar {
-//    classifier = ''
-//    dependencies {
-//    }
-//}
-//
-//tasks.build.dependsOn(shadowJar)
-//tasks.publish.dependsOn(shadowJar)
-
 test {
     useJUnitPlatform()
     testLogging {

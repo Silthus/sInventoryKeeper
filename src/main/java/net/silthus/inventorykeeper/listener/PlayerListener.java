@@ -1,27 +1,26 @@
 package net.silthus.inventorykeeper.listener;
 
+import com.google.inject.Inject;
 import lombok.Getter;
 import net.silthus.inventorykeeper.InventoryManager;
-import net.silthus.inventorykeeper.SKeepInventory;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
+import javax.inject.Singleton;
 import java.util.List;
 
+@Singleton
 public class PlayerListener implements Listener {
 
     @Getter
-    private final SKeepInventory plugin;
+    private final InventoryManager inventoryManager;
 
-    public PlayerListener(SKeepInventory plugin) {
-        this.plugin = plugin;
-    }
-
-    public InventoryManager getInventoryManager() {
-        return getPlugin().getInventoryManager();
+    @Inject
+    PlayerListener(InventoryManager inventoryManager) {
+        this.inventoryManager = inventoryManager;
     }
 
     @EventHandler(ignoreCancelled = true)

@@ -1,7 +1,10 @@
 package net.silthus.inventorykeeper;
 
 import com.google.common.base.Strings;
-import lombok.Data;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import net.silthus.inventorykeeper.api.InventoryFilter;
 import net.silthus.inventorykeeper.config.InventoryConfig;
 import net.silthus.inventorykeeper.config.ItemGroupConfig;
@@ -13,17 +16,29 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
+import javax.inject.Singleton;
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Data
+@Getter
+@EqualsAndHashCode
+@Singleton
 public class InventoryManager {
 
     private final SKeepInventory plugin;
+    private final Provider<WhitelistInventoryFilter> whitelistFilter;
+    private final Provider<BlacklistInventoryFilter> blacklistFilter;
     private final HashMap<String, ItemGroupConfig> itemGroupConfigs = new HashMap<>();
     private final HashMap<String, InventoryConfig> inventoryConfigs = new HashMap<>();
     private final Map<String, InventoryFilter> inventoryFilters = new HashMap<>();
+
+    @Inject
+    InventoryManager(SKeepInventory plugin, Provider<WhitelistInventoryFilter> whitelistFilter, Provider<BlacklistInventoryFilter> blacklistFilter) {
+        this.plugin = plugin;
+        this.whitelistFilter = whitelistFilter;
+        this.blacklistFilter = blacklistFilter;
+    }
 
     public void load() {
 
@@ -46,15 +61,14 @@ public class InventoryManager {
             InventoryFilter filter;
             switch (value.getMode()) {
                 case BLACKLIST:
-                    filter = new BlacklistInventoryFilter(this);
-                    inventoryFilters.put(permission, filter);
+                    filter = blacklistFilter.get();
                     break;
                 case WHITELIST:
                 default:
-                    filter = new WhitelistInventoryFilter(this);
-                    inventoryFilters.put(permission, filter);
+                    filter = whitelistFilter.get();
                     break;
             }
+            inventoryFilters.put(permission, filter);
             filter.load(value);
             getPlugin().getLogger().info("loaded " + key + value.getMode() + " filter with permission: " + permission);
         });

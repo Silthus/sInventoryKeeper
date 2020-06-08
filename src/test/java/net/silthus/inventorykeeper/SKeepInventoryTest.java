@@ -3,6 +3,7 @@ package net.silthus.inventorykeeper;
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import net.silthus.inventorykeeper.config.ItemGroupConfig;
+import net.silthus.inventorykeeper.mock.CustomServerMock;
 import org.junit.jupiter.api.*;
 
 import java.io.File;
@@ -19,7 +20,7 @@ public class SKeepInventoryTest {
 
     @BeforeAll
     public static void beforeAll() {
-        server = MockBukkit.mock();
+        server = MockBukkit.mock(new CustomServerMock());
     }
 
     @BeforeEach

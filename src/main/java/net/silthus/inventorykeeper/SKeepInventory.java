@@ -1,13 +1,15 @@
 package net.silthus.inventorykeeper;
 
-import de.exlll.configlib.configs.yaml.YamlConfiguration;
+import com.google.inject.Binder;
+import com.google.inject.Inject;
 import kr.entree.spigradle.Plugin;
-import lombok.Getter;
+import lombok.AccessLevel;
 import lombok.Setter;
 import net.silthus.inventorykeeper.api.FilterMode;
 import net.silthus.inventorykeeper.config.InventoryConfig;
 import net.silthus.inventorykeeper.listener.PlayerListener;
 import net.silthus.slib.bukkit.BasePlugin;
+import net.silthus.slib.configlib.configs.yaml.YamlConfiguration;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPluginLoader;
 
@@ -18,10 +20,11 @@ import java.util.Collections;
 @Plugin
 public class SKeepInventory extends BasePlugin {
 
-    @Getter
-    @Setter
-    private InventoryManager inventoryManager = new InventoryManager(this);
-    private PlayerListener playerListener = new PlayerListener(this);
+    @Inject
+    @Setter(AccessLevel.PACKAGE)
+    private InventoryManager inventoryManager;
+    @Inject
+    private PlayerListener playerListener;
 
     public SKeepInventory() {
     }
@@ -36,7 +39,7 @@ public class SKeepInventory extends BasePlugin {
         copyExamples();
         createDefaultItemGroups();
 
-        getInventoryManager().load();
+        inventoryManager.load();
 
         registerEvents(playerListener);
     }
@@ -45,7 +48,13 @@ public class SKeepInventory extends BasePlugin {
     public void disable() {
         unregisterEvents(playerListener);
 
-        getInventoryManager().unload();
+        inventoryManager.unload();
+    }
+
+    @Override
+    public void configure(Binder binder) {
+
+        binder.install(new InventoryKeeperModule(this));
     }
 
     private void copyExamples() {

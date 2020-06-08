@@ -1,5 +1,6 @@
 package net.silthus.inventorykeeper.filter;
 
+import com.google.inject.Inject;
 import net.silthus.inventorykeeper.InventoryManager;
 import net.silthus.inventorykeeper.api.ConfiguredInventoryFilter;
 import net.silthus.inventorykeeper.api.Filter;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 @Filter(FilterMode.WHITELIST)
 public class WhitelistInventoryFilter extends ConfiguredInventoryFilter {
 
+    @Inject
     public WhitelistInventoryFilter(InventoryManager inventoryManager) {
         super(inventoryManager);
     }

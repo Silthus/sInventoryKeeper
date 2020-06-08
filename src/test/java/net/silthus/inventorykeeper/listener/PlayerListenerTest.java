@@ -4,12 +4,12 @@ import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import net.silthus.inventorykeeper.InventoryManager;
 import net.silthus.inventorykeeper.SKeepInventory;
+import net.silthus.inventorykeeper.mock.CustomServerMock;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.junit.Ignore;
 import org.junit.jupiter.api.*;
 
 import java.io.File;
@@ -33,7 +33,7 @@ public class PlayerListenerTest {
 
     @BeforeAll
     public static void beforeAll() {
-        server = MockBukkit.mock();
+        server = MockBukkit.mock(new CustomServerMock());
         plugin = MockBukkit.loadWith(SKeepInventory.class, new File("src/test/resources/plugin.yml"));
     }
 
@@ -45,8 +45,7 @@ public class PlayerListenerTest {
     @BeforeEach
     public void beforeEach() {
         inventoryManager = mock(InventoryManager.class);
-        plugin.setInventoryManager(inventoryManager);
-        listener = new PlayerListener(plugin);
+        listener = new PlayerListener(inventoryManager);
         server.getPluginManager().registerEvents(listener, plugin);
     }
 
@@ -85,7 +84,6 @@ public class PlayerListenerTest {
         }
 
         @Test
-        @Ignore // MockBukkit needs to implement Inventory#removeItem
         @DisplayName("should keep inventory if items are kept")
         public void shouldSetKeepInventoryToTrueIfItemsAreKept() {
 
@@ -106,7 +104,6 @@ public class PlayerListenerTest {
         }
 
         @Test
-        @Ignore // MockBukkit needs to implement Inventory#removeItem
         @DisplayName("should remove dropped items from inventory")
         public void shouldRemoveDroppedItemsFromInventory() {
 

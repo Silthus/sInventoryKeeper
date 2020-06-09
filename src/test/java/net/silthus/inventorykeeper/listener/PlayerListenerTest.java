@@ -3,7 +3,7 @@ package net.silthus.inventorykeeper.listener;
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import net.silthus.inventorykeeper.InventoryManager;
-import net.silthus.inventorykeeper.SKeepInventory;
+import net.silthus.inventorykeeper.InventoryKeeper;
 import net.silthus.inventorykeeper.mock.CustomServerMock;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -27,14 +27,14 @@ import static org.mockito.Mockito.when;
 public class PlayerListenerTest {
 
     private static ServerMock server;
-    private static SKeepInventory plugin;
+    private static InventoryKeeper plugin;
     private InventoryManager inventoryManager;
     private PlayerListener listener;
 
     @BeforeAll
     public static void beforeAll() {
         server = MockBukkit.mock(new CustomServerMock());
-        plugin = MockBukkit.loadWith(SKeepInventory.class, new File("src/test/resources/plugin.yml"));
+        plugin = MockBukkit.loadWith(InventoryKeeper.class, new File("src/test/resources/plugin.yml"));
     }
 
     @AfterAll

@@ -2,7 +2,6 @@ package net.silthus.inventorykeeper.config;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.silthus.inventorykeeper.api.FilterMode;
 import net.silthus.slib.configlib.annotation.Comment;
 import net.silthus.slib.configlib.configs.yaml.BukkitYamlConfiguration;
 import net.silthus.slib.configlib.format.FieldNameFormatters;
@@ -24,7 +23,7 @@ public class InventoryConfig extends BukkitYamlConfiguration {
             "WHITELIST: only the defined items are kept",
             "BLACKLIST: all items excluding the defined items are kept"
     })
-    private FilterMode mode = FilterMode.WHITELIST;
+    private String mode = "WHITELIST";
 
     @Comment("Set this to false if you want to disable the config.")
     private boolean enabled = true;

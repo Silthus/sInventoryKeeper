@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Filter {
+public @interface FilterType {
 
-    FilterMode value();
+    String value();
 }

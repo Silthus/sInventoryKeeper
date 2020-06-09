@@ -1,6 +1,5 @@
 package net.silthus.inventorykeeper.config;
 
-import net.silthus.inventorykeeper.api.FilterMode;
 import org.bukkit.Material;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +29,7 @@ public class InventoryConfigTest {
         @DisplayName("should default to WHITELIST")
         public void shouldDefaultToWhitelist() {
 
-            assertThat(config.getMode()).isEqualTo(FilterMode.WHITELIST);
+            assertThat(config.getMode()).isEqualTo("WHITELIST");
         }
 
         @Test
@@ -40,7 +39,7 @@ public class InventoryConfigTest {
             config = new InventoryConfig(new File("src/test/resources/configs", "test-config2.yaml").toPath());
             config.load();
 
-            assertThat(config.getMode()).isEqualTo(FilterMode.BLACKLIST);
+            assertThat(config.getMode()).isEqualTo("BLACKLIST");
         }
     }
 

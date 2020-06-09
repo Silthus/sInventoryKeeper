@@ -12,10 +12,12 @@ A Spigot plugin that enables you to let your players keep a selection of their i
 
 - [Features](#features)
 - [Installation](#installation)
+  - [Dependencies](#dependencies)
 - [Configuration](#configuration)
   - [Item Groups](#item-groups)
   - [Inventory Keeper Configs](#inventory-keeper-configs)
 - [Commands](#commands)
+- [Developer API](#developer-api)
 
 ## Features
 
@@ -115,3 +117,73 @@ items:
 ## Commands
 
 Currently there are now commands. You need to restart the server for the configs to take effect.
+
+## Developer API
+
+You can provide your own `InventoryFilter` types by simply extending `InventoryFilter` and registering it `onLoad` with `InventoryKeeper#registerInventoryFilter(Class<? extends InventoryFilter> filterType)`. Make sure you soft depend on SInventoryKeeper and check if it is loaded before doing that.
+
+> **Important**: You filter needs to be annotated with `@FilterType("name")` and the name must be unique.
+
+This is how you create a custom filter.
+
+```java
+@FilterType("myplugin:custom")
+public class CustomInventoryFilter implements InventoryFilter {
+
+  /**
+    * Checks the given items against the config and filters out all items that should be dropped.
+    * Only returns the items the player keeps.
+    *
+    * @param items items that are dropped on death
+    * @return the filtered items the player keeps
+    */
+  @Override
+  public List<ItemStack> filter(List<ItemStack> items) {
+
+    // do your custom filter logic here
+    // make sure to remove all dropped items and return items the player should keep
+    // you could also add additional items, but I would not recommend that
+    return items;
+  }
+}
+```
+
+You can inject your dependencies into the constructor of the filter.
+
+```java
+@FilterType("myplugin:custom")
+public class CustomInventoryFilter implements InventoryFilter {
+
+  @Inject
+  public CustomInventoryFilter(InventoryManager inventoryManager) {
+    // do stuff
+  }
+
+  @Override
+  public List<ItemStack> filter(List<ItemStack> items) {
+
+    ...
+    return items;
+  }
+}
+```
+
+Then register your custom filter `onLoad` before the InventoryKeeper plugin gets enabled.
+
+```java
+public class YourPlugin extends JavaPlugin {
+
+  @Override
+  public void onLoad() {
+    org.bukkit.plugin.Plugin plugin = Bukkit.getPluginManager().getPlugin("sInventoryKeeper");
+    if (plugin != null) {
+        try {
+            InventoryKeeper inventoryKeeper = (InventoryKeeper) plugin;
+            inventoryKeeper.registerInventoryFilter(CustomInventoryFilter.class);
+        } catch (FilterRegistrationException e) {
+            e.printStackTrace();
+        }
+    }
+  }
+}
+```

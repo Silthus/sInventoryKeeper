@@ -3,40 +3,37 @@ package net.silthus.inventorykeeper;
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import com.google.inject.Provider;
-import net.silthus.inventorykeeper.api.FilterMode;
+import net.silthus.inventorykeeper.api.InventoryFilter;
 import net.silthus.inventorykeeper.config.InventoryConfig;
 import net.silthus.inventorykeeper.config.ItemGroupConfig;
 import net.silthus.inventorykeeper.filter.BlacklistInventoryFilter;
 import net.silthus.inventorykeeper.filter.WhitelistInventoryFilter;
 import net.silthus.inventorykeeper.mock.CustomServerMock;
 import org.apache.commons.lang.RandomStringUtils;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.*;
-import org.mockito.Mockito;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @DisplayName("InventoryManager")
 public class InventoryManagerTest {
 
     private static ServerMock server;
-    private static SKeepInventory plugin;
+    private static InventoryKeeper plugin;
 
     private InventoryManager manager;
 
     @BeforeAll
     public static void beforeAll() {
         server = MockBukkit.mock(new CustomServerMock());
-        plugin = MockBukkit.loadWith(SKeepInventory.class, new File("src/test/resources/plugin.yml"));
+        plugin = MockBukkit.loadWith(InventoryKeeper.class, new File("src/test/resources/plugin.yml"));
     }
 
     @AfterAll
@@ -46,9 +43,13 @@ public class InventoryManagerTest {
 
     @BeforeEach
     public void beforeEach() {
-        Provider<WhitelistInventoryFilter> whitelistFilter = (Provider<WhitelistInventoryFilter>) mock(Provider.class);
-        Provider<BlacklistInventoryFilter> blacklistFilter = (Provider<BlacklistInventoryFilter>) mock(Provider.class);
-        manager = new InventoryManager(plugin, whitelistFilter, blacklistFilter);
+        Map<String, Provider<InventoryFilter>> map = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        Provider<InventoryFilter> whitelistFilter = (Provider<InventoryFilter>) mock(Provider.class);
+        Provider<InventoryFilter> blacklistFilter = (Provider<InventoryFilter>) mock(Provider.class);
+        map.put("whitelist", whitelistFilter);
+        map.put("blacklist", blacklistFilter);
+        manager = new InventoryManager(plugin, map);
+
         when(whitelistFilter.get()).thenReturn(new WhitelistInventoryFilter(manager));
         when(blacklistFilter.get()).thenReturn(new BlacklistInventoryFilter(manager));
     }
@@ -134,7 +135,7 @@ public class InventoryManagerTest {
         public void shouldCreateBlacklistFilters() {
 
             InventoryConfig config = new InventoryConfig(getRandomFile(configPath).toPath());
-            config.setMode(FilterMode.BLACKLIST);
+            config.setMode("BLACKLIST");
             manager.getInventoryConfigs().put("test-foobar-black", config);
 
             manager.load();
@@ -145,6 +146,23 @@ public class InventoryManagerTest {
             assertThat(manager.getInventoryFilters().values())
                     .extracting("class")
                     .contains(BlacklistInventoryFilter.class);
+        }
+
+        @Test
+        @DisplayName("should call load() on filter if configurable")
+        public void shouldCallLoadIfFilterIsConfigurable() {
+
+            manager.getInventoryConfigs().put("test-foobar", new InventoryConfig(getRandomFile(configPath).toPath()));
+
+            manager.load();
+
+            InventoryFilter filter = manager.getInventoryFilters().get(Constants.PERMISSION_PREFIX + "test-foobar");
+
+            assertThat(filter).isNotNull();
+            assertThat(filter)
+                    .extracting("itemTypes")
+                    .asInstanceOf(InstanceOfAssertFactories.ITERABLE)
+                    .isNotEmpty();
         }
     }
 
@@ -230,7 +248,7 @@ public class InventoryManagerTest {
         public void shouldReturnEmptyList() {
 
             assertThat(manager.filterDroppedItems(player, Arrays.asList(new ItemStack(Material.WOODEN_AXE), new ItemStack(Material.STONE))))
-                .isEmpty();
+                    .isEmpty();
         }
 
         @Test

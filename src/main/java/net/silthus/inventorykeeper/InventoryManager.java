@@ -8,9 +8,8 @@ import lombok.Getter;
 import net.silthus.inventorykeeper.api.InventoryFilter;
 import net.silthus.inventorykeeper.config.InventoryConfig;
 import net.silthus.inventorykeeper.config.ItemGroupConfig;
-import net.silthus.inventorykeeper.filter.BlacklistInventoryFilter;
-import net.silthus.inventorykeeper.filter.WhitelistInventoryFilter;
 import net.silthus.slib.config.ConfigUtil;
+import net.silthus.slib.config.Configured;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -22,22 +21,21 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @Singleton
 public class InventoryManager {
 
-    private final SKeepInventory plugin;
-    private final Provider<WhitelistInventoryFilter> whitelistFilter;
-    private final Provider<BlacklistInventoryFilter> blacklistFilter;
-    private final HashMap<String, ItemGroupConfig> itemGroupConfigs = new HashMap<>();
-    private final HashMap<String, InventoryConfig> inventoryConfigs = new HashMap<>();
-    private final Map<String, InventoryFilter> inventoryFilters = new HashMap<>();
+    private final InventoryKeeper plugin;
+    private final Map<String, Provider<InventoryFilter>> filterTypes;
+    private final Map<String, ItemGroupConfig> itemGroupConfigs = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final Map<String, InventoryConfig> inventoryConfigs = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final Map<String, InventoryFilter> inventoryFilters = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
 
     @Inject
-    InventoryManager(SKeepInventory plugin, Provider<WhitelistInventoryFilter> whitelistFilter, Provider<BlacklistInventoryFilter> blacklistFilter) {
+    InventoryManager(InventoryKeeper plugin, Map<String, Provider<InventoryFilter>> filterTypes) {
         this.plugin = plugin;
-        this.whitelistFilter = whitelistFilter;
-        this.blacklistFilter = blacklistFilter;
+        this.filterTypes = filterTypes;
     }
 
     public void load() {
@@ -56,22 +54,25 @@ public class InventoryManager {
 
     private void loadInventoryFilter() {
 
-        getInventoryConfigs().forEach((key, value) -> {
-            String permission = Constants.PERMISSION_PREFIX + key;
-            InventoryFilter filter;
-            switch (value.getMode()) {
-                case BLACKLIST:
-                    filter = blacklistFilter.get();
-                    break;
-                case WHITELIST:
-                default:
-                    filter = whitelistFilter.get();
-                    break;
+        for (Map.Entry<String, InventoryConfig> entry : getInventoryConfigs().entrySet()) {
+            String permission = Constants.PERMISSION_PREFIX + entry.getKey();
+
+            String filterMode = entry.getValue().getMode();
+
+            if (!filterTypes.containsKey(filterMode)) {
+                getPlugin().getLogger().warning("No filter for filter mode " + filterMode + " registered!");
+                continue;
             }
+
+            InventoryFilter filter = filterTypes.get(filterMode).get();
             inventoryFilters.put(permission, filter);
-            filter.load(value);
-            getPlugin().getLogger().info("loaded " + key + value.getMode() + " filter with permission: " + permission);
-        });
+
+            if (filter instanceof Configured) {
+                ((Configured<?>) filter).tryLoad(entry.getValue());
+            }
+
+            getPlugin().getLogger().info("loaded " + entry.getKey() + " " + filterMode + " filter with permission: " + permission);
+        }
     }
 
     public void loadItemGroupConfig(String id, File file, ItemGroupConfig config) {
@@ -112,7 +113,7 @@ public class InventoryManager {
      *
      * @param itemGroup name of the item group
      * @return set of configured materials in the item group.
-     *          Empty set if group does not exist.
+     * Empty set if group does not exist.
      */
     public Set<Material> getItemGroupMaterials(String itemGroup) {
 
@@ -133,7 +134,7 @@ public class InventoryManager {
      * Make sure to pass in the {@link PlayerDeathEvent#getDrops()} reference directly to modify the dropped items.
      *
      * @param player that should have its items filtered
-     * @param drops reference from the {@link PlayerDeathEvent}.
+     * @param drops  reference from the {@link PlayerDeathEvent}.
      * @return list of items that should be kept and put into the inventory of the player on respawn
      */
     public List<ItemStack> filterDroppedItems(Player player, List<ItemStack> drops) {

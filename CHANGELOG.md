@@ -1,3 +1,24 @@
+# [2.0.0](https://github.com/Silthus/sInventoryKeeper/compare/v1.0.4...v2.0.0) (2020-06-09)
+
+
+### Bug Fixes
+
+* **config:** do not load disabled configs ([7a1dd97](https://github.com/Silthus/sInventoryKeeper/commit/7a1dd9731cb1aee91d66537e4fec2cace7c62dcf))
+
+
+### Features
+
+* **api:** add option to register custom InventoryFilters ([71a39cd](https://github.com/Silthus/sInventoryKeeper/commit/71a39cd13d64b496ff0ab17289a737ab2d9ffe37))
+* **cmd:** add `/sik reload` command ([5b87fcf](https://github.com/Silthus/sInventoryKeeper/commit/5b87fcf9bbad027e783b1657f140d10dcdf1739a))
+
+
+* feat!: use slib as dependency injection framework ([c0c7719](https://github.com/Silthus/sInventoryKeeper/commit/c0c77191214a7f41afc57f8e39e62bd0f2469bb0))
+
+
+### BREAKING CHANGES
+
+* requires at least [sLib 1.2.4](https://github.com/Silthus/sLib/releases/tag/v1.2.4)
+
 ## [1.0.4](https://github.com/Silthus/sInventoryKeeper/compare/v1.0.3...v1.0.4) (2020-05-24)
 
 

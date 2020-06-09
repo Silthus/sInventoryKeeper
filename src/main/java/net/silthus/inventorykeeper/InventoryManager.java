@@ -103,6 +103,7 @@ public class InventoryManager {
 
         if (!config.isEnabled()) {
             getPlugin().getLogger().info("not loading disabled config: " + relativeConfigPath);
+            return;
         }
 
         inventoryConfigs.put(id, config);

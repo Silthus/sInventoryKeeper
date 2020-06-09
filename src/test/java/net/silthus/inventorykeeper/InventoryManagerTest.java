@@ -79,14 +79,15 @@ public class InventoryManagerTest {
         @DisplayName("should not load disabled configs")
         public void shouldNotLoadDisabledConfigs() {
 
-            InventoryConfig config = new InventoryConfig(getRandomFile(configPath).toPath());
+            File file = getRandomFile(configPath);
+            InventoryConfig config = new InventoryConfig(file.toPath());
             config.setEnabled(false);
             config.loadAndSave();
 
             manager.load();
 
             assertThat(manager.getInventoryConfigs())
-                    .doesNotContainValue(config);
+                    .doesNotContainKey(file.getName().replace(".yaml", ""));
         }
 
         @Test

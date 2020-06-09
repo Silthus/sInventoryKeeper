@@ -1,6 +1,6 @@
 package net.silthus.inventorykeeper;
 
-import co.aikar.commands.PaperCommandManager;
+import co.aikar.commands.BukkitCommandManager;
 import com.google.inject.Binder;
 import kr.entree.spigradle.Plugin;
 import lombok.AccessLevel;
@@ -41,7 +41,7 @@ public class InventoryKeeper extends BasePlugin {
     private InventoryManager inventoryManager;
     @Inject
     private PlayerListener playerListener;
-    private PaperCommandManager commandManager;
+    private BukkitCommandManager commandManager;
     @Inject
     private InventoryKeeperCommands commands;
 
@@ -72,7 +72,7 @@ public class InventoryKeeper extends BasePlugin {
     @Override
     public void enable() {
 
-        commandManager = new PaperCommandManager(this);
+        commandManager = new BukkitCommandManager(this);
         commandManager.registerCommand(commands);
 
         copyExamples();

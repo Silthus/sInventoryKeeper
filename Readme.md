@@ -116,7 +116,11 @@ items:
 
 ## Commands
 
-Currently there are now commands. You need to restart the server for the configs to take effect.
+Currently there is only one command: reload the plugin including all configs.
+
+| Command | Description | Permission |
+| :-----: | ----------- | ------- |
+| `/inventorykeeper reload` | Reloads all configs from disk and clears the cache. | `sinventorykeeper.admin.reload` |
 
 ## Developer API
 

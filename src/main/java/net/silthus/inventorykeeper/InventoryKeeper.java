@@ -1,7 +1,7 @@
 package net.silthus.inventorykeeper;
 
+import co.aikar.commands.PaperCommandManager;
 import com.google.inject.Binder;
-import com.google.inject.Inject;
 import kr.entree.spigradle.Plugin;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,6 +9,7 @@ import lombok.Setter;
 import net.silthus.inventorykeeper.api.FilterType;
 import net.silthus.inventorykeeper.api.FilterRegistrationException;
 import net.silthus.inventorykeeper.api.InventoryFilter;
+import net.silthus.inventorykeeper.commands.InventoryKeeperCommands;
 import net.silthus.inventorykeeper.config.InventoryConfig;
 import net.silthus.inventorykeeper.filter.BlacklistInventoryFilter;
 import net.silthus.inventorykeeper.filter.WhitelistInventoryFilter;
@@ -21,6 +22,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,6 +41,9 @@ public class InventoryKeeper extends BasePlugin {
     private InventoryManager inventoryManager;
     @Inject
     private PlayerListener playerListener;
+    private PaperCommandManager commandManager;
+    @Inject
+    private InventoryKeeperCommands commands;
 
     public InventoryKeeper() {
         registerInventoryFilters();
@@ -49,6 +54,10 @@ public class InventoryKeeper extends BasePlugin {
         super(loader, description, dataFolder, file);
 
         registerInventoryFilters();
+    }
+
+    public void reload() {
+        getInventoryManager().reload();
     }
 
     private void registerInventoryFilters() {
@@ -62,6 +71,9 @@ public class InventoryKeeper extends BasePlugin {
 
     @Override
     public void enable() {
+
+        commandManager = new PaperCommandManager(this);
+        commandManager.registerCommand(commands);
 
         copyExamples();
         createDefaultItemGroups();

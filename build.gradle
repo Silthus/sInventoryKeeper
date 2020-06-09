@@ -94,6 +94,7 @@ dependencies {
 
     //Add dependencies here
     implementation 'net.silthus:slib:1.3.0'
+    implementation 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
 
     //Test dependencies
     testImplementation 'com.google.jimfs:jimfs:1.1'
@@ -104,6 +105,18 @@ dependencies {
     testImplementation 'org.projectlombok:lombok:1.18.12'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
 }
+
+shadowJar {
+    classifier = ''
+    dependencies {
+        include(dependency('co.aikar:acf-paper:'))
+    }
+    relocate 'co.aikar.commands', "${packageName}.acf"
+    relocate 'co.aikar.locales', "${packageName}.locales"
+}
+
+tasks.build.dependsOn(shadowJar)
+tasks.publish.dependsOn(shadowJar)
 
 test {
     useJUnitPlatform()

@@ -38,6 +38,11 @@ public class InventoryManager {
         this.filterTypes = filterTypes;
     }
 
+    public void reload() {
+        unload();
+        load();
+    }
+
     public void load() {
 
         ConfigUtil.loadRecursiveConfigs(plugin, Constants.ITEM_GROUPS_CONFIG_PATH, ItemGroupConfig.class, this::loadItemGroupConfig);

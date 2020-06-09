@@ -1,4 +1,4 @@
-main: net.silthus.inventorykeeper.SKeepInventory
+main: net.silthus.inventorykeeper.InventoryKeeper
 name: sInventoryKeeper
 version: 1.0.4
 authors: [Silthus]

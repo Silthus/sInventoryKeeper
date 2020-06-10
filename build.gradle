@@ -109,7 +109,7 @@ dependencies {
 shadowJar {
     classifier = ''
     dependencies {
-        include(dependency('co.aikar:acf-paper:'))
+        include(dependency('co.aikar:acf-bukkit:'))
     }
     relocate 'co.aikar.commands', "${packageName}.acf"
     relocate 'co.aikar.locales', "${packageName}.locales"

@@ -3,6 +3,9 @@
 [![Build Status](https://github.com/Silthus/sInventoryKeeper/workflows/Build/badge.svg)](../../actions?query=workflow%3ABuild)
 [![codecov](https://codecov.io/gh/Silthus/sInventoryKeeper/branch/master/graph/badge.svg)](https://codecov.io/gh/Silthus/sInventoryKeeper)
 [![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/Silthus/sInventoryKeeper?include_prereleases&label=release)](../../releases)
+[![Spiget tested server versions](https://img.shields.io/spiget/tested-versions/79988)](https://www.spigotmc.org/resources/sinventorykeeper.79988/)
+[![Spiget Downloads](https://img.shields.io/spiget/downloads/79988)](https://www.spigotmc.org/resources/sinventorykeeper.79988/)
+[![Spiget Rating](https://img.shields.io/spiget/rating/79988)](https://www.spigotmc.org/resources/sinventorykeeper.79988/)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
@@ -32,6 +35,7 @@ A Spigot plugin that enables you to let your players keep a selection of their i
   - `WHITELIST`: drop all items except the ones defined in the config
   - `BLACKLIST`: keep all items except the ones defined in the config
 - Players can have multiple configs assigned to them
+- API for developers to create custom inventory filters that will be applied on death
 - over 85% unit test coverage
 
 ## Installation
@@ -41,7 +45,7 @@ Restart the server and take a look at the generated default configs inside the `
 
 ### Dependencies
 
-This plugin depends on [sLib](https://github.com/Silthus/sLib) which provides a lot of useful features and common functions for all of my plugins.
+This plugin **requires [sLib](https://github.com/Silthus/sLib)** which provides a lot of useful features and common functions for all of my plugins.
 
 > [Download sLib](https://github.com/Silthus/sLib/releases/latest) and drop it into your plugin directory.
 
@@ -99,7 +103,7 @@ If you have a config named `example.yaml` inside the `configs/` directory, its p
 A config looks like this.
 
 ```yaml
-# >ou can define two different modes that will control how this config gets loaded.
+# You can define two different modes that will control how this config gets loaded.
 # Allowed values (case sensitive): WHITELIST or BLACKLIST
 # WHITELIST: only the defined items are kept
 # BLACKLIST: all items excluding the defined items are kept

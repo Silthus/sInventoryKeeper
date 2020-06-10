@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/Silthus/sInventoryKeeper/compare/v2.0.0...v2.0.1) (2020-06-10)
+
+
+### Bug Fixes
+
+* shade acf-bukkit into jar ([aebd50c](https://github.com/Silthus/sInventoryKeeper/commit/aebd50c0e2f8a1855bc18444e92837edd2996e47))
+
 # [2.0.0](https://github.com/Silthus/sInventoryKeeper/compare/v1.0.4...v2.0.0) (2020-06-09)
 
 

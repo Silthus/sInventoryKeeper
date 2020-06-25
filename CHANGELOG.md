@@ -1,3 +1,11 @@
+# [2.1.0](https://github.com/Silthus/sInventoryKeeper/compare/v2.0.1...v2.1.0) (2020-06-25)
+
+
+### Features
+
+* **build:** split build and test into separate jobs ([1da718b](https://github.com/Silthus/sInventoryKeeper/commit/1da718b6b31ca68d8e6224487fb22463f7cf5447))
+* update to spigot/minecraft 1.16.1 ([90f7c41](https://github.com/Silthus/sInventoryKeeper/commit/90f7c41ba8cb5a1fdea044926b0684831cdf1699))
+
 ## [2.0.1](https://github.com/Silthus/sInventoryKeeper/compare/v2.0.0...v2.0.1) (2020-06-10)
 
 

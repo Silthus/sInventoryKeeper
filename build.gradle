@@ -138,4 +138,4 @@ task copyPluginYaml(type: Copy, dependsOn: spigotPluginYaml) {
 
 tasks.test.dependsOn(copyPluginYaml)
 
-defaultTasks 'build', 'deploy'
+defaultTasks 'build'

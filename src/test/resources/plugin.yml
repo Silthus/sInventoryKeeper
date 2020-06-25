@@ -1,6 +1,6 @@
 main: net.silthus.inventorykeeper.InventoryKeeper
 name: sInventoryKeeper
-version: 1.0.4
+version: 2.0.1
 authors: [Silthus]
 api-version: '1.13'
 load: STARTUP

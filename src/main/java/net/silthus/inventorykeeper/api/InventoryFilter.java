@@ -20,5 +20,5 @@ public interface InventoryFilter {
      * @param items items that are dropped on death
      * @return the filtered items the player keeps
      */
-    List<ItemStack> filter(List<ItemStack> items);
+    FilterResult filter(ItemStack... items);
 }

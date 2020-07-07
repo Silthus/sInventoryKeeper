@@ -3,6 +3,7 @@ package net.silthus.inventorykeeper;
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import com.google.inject.Provider;
+import net.silthus.inventorykeeper.api.FilterResult;
 import net.silthus.inventorykeeper.api.InventoryFilter;
 import net.silthus.inventorykeeper.config.InventoryConfig;
 import net.silthus.inventorykeeper.config.ItemGroupConfig;
@@ -14,6 +15,8 @@ import org.assertj.core.api.InstanceOfAssertFactories;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.junit.jupiter.api.*;
 
 import java.io.File;
@@ -22,6 +25,7 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings("unchecked")
 @DisplayName("InventoryManager")
 public class InventoryManagerTest {
 
@@ -222,6 +226,7 @@ public class InventoryManagerTest {
 
 
     @Nested
+    @Disabled
     @DisplayName("filterDropedItems(Player, List<ItemStack>)")
     public class FilterItems {
 
@@ -248,7 +253,8 @@ public class InventoryManagerTest {
         @DisplayName("should return empty list if player has no permissions")
         public void shouldReturnEmptyList() {
 
-            assertThat(manager.filterDroppedItems(player, Arrays.asList(new ItemStack(Material.WOODEN_AXE), new ItemStack(Material.STONE))))
+            FilterResult result = manager.filterItems(player, new ItemStack(Material.WOODEN_AXE), new ItemStack(Material.STONE));
+            assertThat(result.getKeptItems())
                     .isEmpty();
         }
 
@@ -263,7 +269,8 @@ public class InventoryManagerTest {
 
             player.addAttachment(plugin, "test", true);
 
-            assertThat(manager.filterDroppedItems(player, new ArrayList<>(items)))
+            FilterResult result = manager.filterItems(player, items.toArray(new ItemStack[0]));
+            assertThat(result.getKeptItems())
                     .hasSize(3)
                     .containsExactly(items.toArray(new ItemStack[0]));
         }
@@ -280,7 +287,8 @@ public class InventoryManagerTest {
 
             player.addAttachment(plugin, "test", true);
 
-            assertThat(manager.filterDroppedItems(player, new ArrayList<>(items)))
+            FilterResult result = manager.filterItems(player, items.toArray(new ItemStack[0]));
+            assertThat(result.getKeptItems())
                     .hasSize(3)
                     .doesNotContain(new ItemStack(Material.BEDROCK, 5));
         }
@@ -298,7 +306,8 @@ public class InventoryManagerTest {
             player.addAttachment(plugin, "test", true);
             player.addAttachment(plugin, "test2", true);
 
-            assertThat(manager.filterDroppedItems(player, new ArrayList<>(items)))
+            FilterResult result = manager.filterItems(player, items.toArray(new ItemStack[0]));
+            assertThat(result.getKeptItems())
                     .hasSize(4)
                     .contains(items.toArray(new ItemStack[0]));
         }
@@ -315,11 +324,31 @@ public class InventoryManagerTest {
 
             player.addAttachment(plugin, "test", true);
 
-            ArrayList<ItemStack> drops = new ArrayList<>(items);
-            manager.filterDroppedItems(player, drops);
-            assertThat(drops)
+            FilterResult result = manager.filterItems(player, items.toArray(new ItemStack[0]));
+            assertThat(result.getDrops())
                     .hasSize(1)
                     .containsExactly(new ItemStack(Material.BEDROCK, 5));
+        }
+
+        @Test
+        @DisplayName("should remove armor items on death")
+        void shouldRemoveDamagedItems() {
+
+            ItemStack chestplate = new ItemStack(Material.IRON_CHESTPLATE);
+            ItemMeta itemMeta = chestplate.getItemMeta();
+            if (itemMeta instanceof Damageable) {
+                ((Damageable) itemMeta).setDamage(20);
+            }
+            chestplate.setItemMeta(itemMeta);
+            List<ItemStack> items = Arrays.asList(
+                    chestplate
+            );
+
+            player.addAttachment(plugin, "test", true);
+
+            FilterResult result = manager.filterItems(player, items.toArray(new ItemStack[0]));
+            assertThat(result.getDrops()).containsExactly(chestplate);
+            assertThat(result.getKeptItems()).isEmpty();
         }
     }
 

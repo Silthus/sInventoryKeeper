@@ -9,10 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -149,8 +146,8 @@ public class ConfiguredInventoryFilterTest {
         }
 
         @Override
-        public List<ItemStack> filter(List<ItemStack> items) {
-            return items;
+        public FilterResult filter(ItemStack... items) {
+            return new FilterResult(items, new ArrayList<>());
         }
     }
 }

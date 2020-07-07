@@ -1,5 +1,6 @@
 package net.silthus.inventorykeeper.api;
 
+import net.silthus.inventorykeeper.FilterException;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public interface InventoryFilter {
      *
      * @param items items that are dropped on death
      * @return the filtered items the player keeps
+     * @throws FilterException if the filters fails to filter the result and all filtering should be aborted
      */
-    FilterResult filter(ItemStack... items);
+    FilterResult filter(ItemStack... items) throws FilterException;
 }

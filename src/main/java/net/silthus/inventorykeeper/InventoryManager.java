@@ -12,6 +12,7 @@ import net.silthus.inventorykeeper.config.ItemGroupConfig;
 import net.silthus.slib.config.ConfigUtil;
 import net.silthus.slib.config.Configured;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
@@ -32,6 +33,7 @@ public class InventoryManager {
     private final Map<String, InventoryConfig> inventoryConfigs = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, InventoryFilter> inventoryFilters = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
+    private FileConfiguration config;
 
     @Inject
     InventoryManager(InventoryKeeper plugin, Map<String, Provider<InventoryFilter>> filterTypes) {
@@ -45,6 +47,9 @@ public class InventoryManager {
     }
 
     public void load() {
+
+        getPlugin().saveDefaultConfig();
+        this.config = getPlugin().getConfig();
 
         ConfigUtil.loadRecursiveConfigs(plugin, Constants.ITEM_GROUPS_CONFIG_PATH, ItemGroupConfig.class, this::loadItemGroupConfig);
         ConfigUtil.loadRecursiveConfigs(plugin, Constants.INVENTORY_CONFIG_PATH, InventoryConfig.class, this::loadInventoryConfig);
@@ -134,25 +139,32 @@ public class InventoryManager {
     /**
      * Filters given items.
      * Separating them into two stacks: the drops and the items that are kept.
+     * The kept items take precedence if multiple {@link InventoryFilter} apply to the same {@link Player}.
      *
      * @param player that should have its items filtered
      * @param items  that you want to split into drops and kept items
      * @return a {@link FilterResult} with the items that should be kept and the ones that should be dropped
+     * @throws FilterException when filters fail to match or cannot be combined
      */
-    public FilterResult filterItems(Player player, ItemStack... items) {
+    public FilterResult filterItems(Player player, ItemStack... items) throws FilterException {
 
         List<InventoryFilter> filters = getInventoryFilters().entrySet().stream()
                 .filter(entry -> player.hasPermission(entry.getKey()))
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toList());
 
-        if (filters.isEmpty()) return new FilterResult(items, new ArrayList<>());
+        if (filters.isEmpty()) return new FilterResult(new ItemStack[items.length], items);
+
+        InventoryFilter inventoryFilter = filters.get(0);
+        if (!filters.stream().allMatch(filter -> filter.getClass().equals(inventoryFilter.getClass()))) {
+            throw new FilterException("Cannot combine filters of different types.");
+        }
 
         FilterResult result = new FilterResult();
 
-        filters.forEach(filter -> {
-            result.combine(filter.filter(items));
-        });
+        for (InventoryFilter filter : filters) {
+            result = result.combine(filter.filter(items.clone())).cleanupDuplicates(FilterResult.CleanupMode.KEEP_ITEMS);
+        }
 
         return result;
     }

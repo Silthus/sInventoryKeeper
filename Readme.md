@@ -120,6 +120,11 @@ items:
 - dirt
 ```
 
+---
+**IMPORTANT**  
+> `WHITELIST` and `BLACKLIST` filters cannot be combined. Players can only have multiple filters of the same type.
+---
+
 ## Commands
 
 Currently there is only one command: reload the plugin including all configs.
@@ -172,7 +177,6 @@ public class CustomInventoryFilter implements InventoryFilter {
   @Override
   public List<ItemStack> filter(List<ItemStack> items) {
 
-    ...
     return items;
   }
 }

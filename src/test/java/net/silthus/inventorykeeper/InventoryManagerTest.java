@@ -3,6 +3,7 @@ package net.silthus.inventorykeeper;
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import com.google.inject.Provider;
+import lombok.SneakyThrows;
 import net.silthus.inventorykeeper.api.FilterResult;
 import net.silthus.inventorykeeper.api.InventoryFilter;
 import net.silthus.inventorykeeper.config.InventoryConfig;
@@ -226,7 +227,6 @@ public class InventoryManagerTest {
 
 
     @Nested
-    @Disabled
     @DisplayName("filterDropedItems(Player, List<ItemStack>)")
     public class FilterItems {
 
@@ -250,15 +250,20 @@ public class InventoryManagerTest {
         }
 
         @Test
+        @SneakyThrows
         @DisplayName("should return empty list if player has no permissions")
         public void shouldReturnEmptyList() {
 
             FilterResult result = manager.filterItems(player, new ItemStack(Material.WOODEN_AXE), new ItemStack(Material.STONE));
             assertThat(result.getKeptItems())
-                    .isEmpty();
+                    .hasSize(2)
+                    .containsOnlyNulls();
+            assertThat(result.getDrops())
+                    .containsExactly(new ItemStack(Material.WOODEN_AXE), new ItemStack(Material.STONE));
         }
 
         @Test
+        @SneakyThrows
         @DisplayName("should return all kept items")
         public void shouldReturnAllItems() {
 
@@ -270,12 +275,14 @@ public class InventoryManagerTest {
             player.addAttachment(plugin, "test", true);
 
             FilterResult result = manager.filterItems(player, items.toArray(new ItemStack[0]));
+
+            assertThat(result.getDrops()).containsOnlyNulls();
             assertThat(result.getKeptItems())
-                    .hasSize(3)
                     .containsExactly(items.toArray(new ItemStack[0]));
         }
 
         @Test
+        @SneakyThrows
         @DisplayName("should only apply configs with matching permissions")
         public void shouldOnlyApplyConfigsWithMatchingPermission() {
 
@@ -289,11 +296,13 @@ public class InventoryManagerTest {
 
             FilterResult result = manager.filterItems(player, items.toArray(new ItemStack[0]));
             assertThat(result.getKeptItems())
-                    .hasSize(3)
+                    .hasSize(4)
+                    .containsNull()
                     .doesNotContain(new ItemStack(Material.BEDROCK, 5));
         }
 
         @Test
+        @SneakyThrows
         @DisplayName("should combine multiple matching configs")
         public void shouldCombineMultipleMatchingConfigs() {
 
@@ -307,12 +316,42 @@ public class InventoryManagerTest {
             player.addAttachment(plugin, "test2", true);
 
             FilterResult result = manager.filterItems(player, items.toArray(new ItemStack[0]));
+
+            assertThat(result.getDrops()).containsOnlyNulls();
             assertThat(result.getKeptItems())
-                    .hasSize(4)
-                    .contains(items.toArray(new ItemStack[0]));
+                    .containsExactly(items.toArray(new ItemStack[0]));
         }
 
         @Test
+        @SneakyThrows
+        @DisplayName("should combine multiple matching configs with drops and kept items")
+        public void shouldCombineMultipleMatchingConfigsMix() {
+
+            ArrayList<ItemStack> items = new ArrayList<>();
+            items.add(new ItemStack(Material.STONE, 20));
+            items.add(new ItemStack(Material.DIRT, 64));
+            items.add(new ItemStack(Material.GRAVEL, 12));
+            items.add(new ItemStack(Material.BEDROCK, 5));
+            items.add(new ItemStack(Material.IRON_CHESTPLATE));
+
+            player.addAttachment(plugin, "test", true);
+            player.addAttachment(plugin, "test2", true);
+
+            FilterResult result = manager.filterItems(player, items.toArray(new ItemStack[0]));
+
+            assertThat(result.getDrops()).containsExactly(null, null, null, null, new ItemStack(Material.IRON_CHESTPLATE));
+            assertThat(result.getKeptItems())
+                    .containsExactly(
+                            new ItemStack(Material.STONE, 20),
+                            new ItemStack(Material.DIRT, 64),
+                            new ItemStack(Material.GRAVEL, 12),
+                            new ItemStack(Material.BEDROCK, 5),
+                            null
+                    );
+        }
+
+        @Test
+        @SneakyThrows
         @DisplayName("should remove kept items from drops reference")
         public void shouldRemoveItemsFromInputReference() {
 
@@ -325,12 +364,19 @@ public class InventoryManagerTest {
             player.addAttachment(plugin, "test", true);
 
             FilterResult result = manager.filterItems(player, items.toArray(new ItemStack[0]));
+            assertThat(result.getKeptItems())
+                    .containsExactly(
+                            new ItemStack(Material.STONE, 20),
+                            new ItemStack(Material.DIRT, 64),
+                            new ItemStack(Material.GRAVEL, 12),
+                            null
+                    );
             assertThat(result.getDrops())
-                    .hasSize(1)
-                    .containsExactly(new ItemStack(Material.BEDROCK, 5));
+                    .containsExactly(null, null, null, new ItemStack(Material.BEDROCK, 5));
         }
 
         @Test
+        @SneakyThrows
         @DisplayName("should remove armor items on death")
         void shouldRemoveDamagedItems() {
 
@@ -340,15 +386,27 @@ public class InventoryManagerTest {
                 ((Damageable) itemMeta).setDamage(20);
             }
             chestplate.setItemMeta(itemMeta);
-            List<ItemStack> items = Arrays.asList(
-                    chestplate
-            );
 
             player.addAttachment(plugin, "test", true);
 
-            FilterResult result = manager.filterItems(player, items.toArray(new ItemStack[0]));
+            FilterResult result = manager.filterItems(player, chestplate);
             assertThat(result.getDrops()).containsExactly(chestplate);
-            assertThat(result.getKeptItems()).isEmpty();
+            assertThat(result.getKeptItems()).containsOnlyNulls();
+        }
+
+        @Test
+        @DisplayName("should not allow combining filters of different types")
+        void shouldNotCombineBlacklistAndWhitelistFilter() {
+
+            BlacklistInventoryFilter blacklistFilter = new BlacklistInventoryFilter(manager);
+            blacklistFilter.getItemTypes().add(Material.BEDROCK);
+            manager.getInventoryFilters().put("test3", blacklistFilter);
+
+            player.addAttachment(plugin, "test", true);
+            player.addAttachment(plugin, "test3", true);
+
+            assertThatExceptionOfType(FilterException.class)
+                    .isThrownBy(() -> manager.filterItems(player, new ItemStack(Material.PAPER)));
         }
     }
 

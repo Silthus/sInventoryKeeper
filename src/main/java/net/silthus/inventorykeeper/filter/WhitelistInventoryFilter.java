@@ -22,17 +22,21 @@ public class WhitelistInventoryFilter extends ConfiguredInventoryFilter {
     @Override
     public FilterResult filter(ItemStack... items) {
 
-        ArrayList<ItemStack> drops = new ArrayList<>();
+        ItemStack[] keptItems = new ItemStack[items.length];
+        ItemStack[] drops = new ItemStack[items.length];
 
         for (int i = 0; i < items.length; i++) {
             ItemStack item = items[i];
             if (item == null) continue;
-            if (!getItemTypes().contains(item.getType())) {
-                items[i] = null;
-                drops.add(item);
+            if (getItemTypes().contains(item.getType())) {
+                keptItems[i] = item;
+                drops[i] = null;
+            } else {
+                drops[i] = item;
+                keptItems[i] = null;
             }
         }
 
-        return new FilterResult(items, drops);
+        return new FilterResult(keptItems, drops);
     }
 }

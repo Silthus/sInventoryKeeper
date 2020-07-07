@@ -147,7 +147,7 @@ public class ConfiguredInventoryFilterTest {
 
         @Override
         public FilterResult filter(ItemStack... items) {
-            return new FilterResult(items, new ArrayList<>());
+            return new FilterResult(items, new ItemStack[items.length]);
         }
     }
 }

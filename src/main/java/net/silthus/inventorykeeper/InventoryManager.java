@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import net.silthus.inventorykeeper.api.FilterResult;
 import net.silthus.inventorykeeper.api.InventoryFilter;
 import net.silthus.inventorykeeper.config.InventoryConfig;
 import net.silthus.inventorykeeper.config.ItemGroupConfig;
@@ -131,35 +132,28 @@ public class InventoryManager {
     }
 
     /**
-     * Filters the dopped items of the player.
+     * Filters given items.
      * Separating them into two stacks: the drops and the items that are kept.
-     * <br>
-     * The items that should be kept are returned and the initial drops list
-     * is modified to contain the items that should be dropped.
-     * <br>
-     * Make sure to pass in the {@link PlayerDeathEvent#getDrops()} reference directly to modify the dropped items.
      *
      * @param player that should have its items filtered
-     * @param drops  reference from the {@link PlayerDeathEvent}.
-     * @return list of items that should be kept and put into the inventory of the player on respawn
+     * @param items  that you want to split into drops and kept items
+     * @return a {@link FilterResult} with the items that should be kept and the ones that should be dropped
      */
-    public List<ItemStack> filterDroppedItems(Player player, List<ItemStack> drops) {
+    public FilterResult filterItems(Player player, ItemStack... items) {
 
         List<InventoryFilter> filters = getInventoryFilters().entrySet().stream()
                 .filter(entry -> player.hasPermission(entry.getKey()))
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toList());
 
-        if (filters.isEmpty()) return new ArrayList<>();
+        if (filters.isEmpty()) return new FilterResult(items, new ArrayList<>());
 
-        ArrayList<ItemStack> keptItems = new ArrayList<>();
+        FilterResult result = new FilterResult();
 
         filters.forEach(filter -> {
-            List<ItemStack> itemStacks = filter.filter(drops);
-            keptItems.addAll(itemStacks);
-            drops.removeAll(itemStacks);
+            result.combine(filter.filter(items));
         });
 
-        return keptItems;
+        return result;
     }
 }

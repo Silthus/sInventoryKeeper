@@ -2,7 +2,7 @@ package net.silthus.inventorykeeper;
 
 import co.aikar.commands.BukkitCommandManager;
 import com.google.inject.Binder;
-import kr.entree.spigradle.Plugin;
+import kr.entree.spigradle.annotations.PluginMain;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
-@Plugin
+@PluginMain
 public class InventoryKeeper extends BasePlugin {
 
     @Getter(AccessLevel.PACKAGE)

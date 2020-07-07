@@ -3,6 +3,7 @@ package net.silthus.inventorykeeper.filter;
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import net.silthus.inventorykeeper.InventoryManager;
+import net.silthus.inventorykeeper.api.FilterResult;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.*;
@@ -60,8 +61,9 @@ public class WhitelistInventoryFilterTest {
         @DisplayName("should return an empty list if no items match")
         public void shouldReturnEmptyListIfWhitelistAndNoMatches() {
 
-            assertThat(filter.filter(items))
-                    .isEmpty();
+            FilterResult result = filter.filter(items.toArray(new ItemStack[0]));
+            assertThat(result.getKeptItems())
+                    .containsExactly(null, null);
         }
 
         @Test
@@ -70,9 +72,9 @@ public class WhitelistInventoryFilterTest {
 
             items.add(new ItemStack(Material.ACACIA_WOOD, 1));
 
-            assertThat(filter.filter(items))
-                    .hasSize(1)
-                    .containsExactly(new ItemStack(Material.ACACIA_WOOD, 1));
+            FilterResult result = filter.filter(items.toArray(new ItemStack[0]));
+            assertThat(result.getKeptItems())
+                    .containsExactly(null, null, new ItemStack(Material.ACACIA_WOOD, 1));
         }
 
         @Test
@@ -85,9 +87,9 @@ public class WhitelistInventoryFilterTest {
             items.add(stone);
             items.add(gravel);
 
-            assertThat(filter.filter(items))
-                    .hasSize(2)
-                    .contains(stone, gravel);
+            FilterResult result = filter.filter(items.toArray(new ItemStack[0]));
+            assertThat(result.getKeptItems())
+                    .containsExactly(null, null, stone, gravel);
         }
 
         @Test
@@ -102,9 +104,10 @@ public class WhitelistInventoryFilterTest {
             items.add(stone2);
             items.add(gravel);
 
-            assertThat(filter.filter(items))
-                    .hasSize(3)
-                    .contains(stone, stone2, gravel);
+            FilterResult result = filter.filter(items.toArray(new ItemStack[0]));
+            assertThat(result.getKeptItems())
+                    .hasSize(5)
+                    .contains(null, null, stone, stone2, gravel);
         }
     }
 }

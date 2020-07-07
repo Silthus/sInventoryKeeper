@@ -2,6 +2,7 @@ package net.silthus.inventorykeeper;
 
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
+import net.silthus.inventorykeeper.api.FilterResult;
 import net.silthus.inventorykeeper.api.FilterType;
 import net.silthus.inventorykeeper.api.FilterRegistrationException;
 import net.silthus.inventorykeeper.api.InventoryFilter;
@@ -103,8 +104,8 @@ public class InventoryKeeperTest {
         class MissingAnnotationFilter implements InventoryFilter {
 
             @Override
-            public List<ItemStack> filter(List<ItemStack> items) {
-                return items;
+            public FilterResult filter(ItemStack... items) {
+                return null;
             }
         }
 
@@ -112,34 +113,31 @@ public class InventoryKeeperTest {
         class FilterOne implements InventoryFilter {
 
             @Override
-            public List<ItemStack> filter(List<ItemStack> items) {
+            public FilterResult filter(ItemStack... items) {
                 return null;
             }
         }
 
         @FilterType("One")
         class FilterOneDuplicate implements InventoryFilter {
-
             @Override
-            public List<ItemStack> filter(List<ItemStack> items) {
+            public FilterResult filter(ItemStack... items) {
                 return null;
             }
         }
 
         @FilterType("Two")
         class FilterTwo implements InventoryFilter {
-
             @Override
-            public List<ItemStack> filter(List<ItemStack> items) {
+            public FilterResult filter(ItemStack... items) {
                 return null;
             }
         }
 
         @FilterType("one")
         class FilterLowerCase implements InventoryFilter {
-
             @Override
-            public List<ItemStack> filter(List<ItemStack> items) {
+            public FilterResult filter(ItemStack... items) {
                 return null;
             }
         }

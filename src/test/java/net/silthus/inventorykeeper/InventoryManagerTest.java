@@ -16,6 +16,7 @@ import org.assertj.core.api.InstanceOfAssertFactories;
 import org.bukkit.Material;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -56,14 +57,8 @@ public class InventoryManagerTest {
         map.put("whitelist", whitelistFilter);
         map.put("blacklist", blacklistFilter);
         manager = new InventoryManager(plugin, map);
-        FileConfiguration configuration = mock(FileConfiguration.class);
+        FileConfiguration configuration = new YamlConfiguration();
         manager.config = new PluginConfig(configuration);
-        when(configuration.getString("combination_mode")).thenReturn(FilterResult.CleanupMode.KEEP_ITEMS.name());
-        MemoryConfiguration messages = new MemoryConfiguration();
-        messages.set("on_death_keep_items", "");
-        messages.set("on_death_drop_all", "");
-        when(configuration.getConfigurationSection("messages")).thenReturn(messages);
-        when(configuration.isConfigurationSection("messages")).thenReturn(true);
 
         when(whitelistFilter.get()).thenReturn(new WhitelistInventoryFilter(manager));
         when(blacklistFilter.get()).thenReturn(new BlacklistInventoryFilter(manager));

@@ -18,6 +18,7 @@ import net.silthus.inventorykeeper.injection.InventoryKeeperModule;
 import net.silthus.inventorykeeper.listener.PlayerListener;
 import net.silthus.slib.bukkit.BasePlugin;
 import net.silthus.slib.configlib.configs.yaml.YamlConfiguration;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
@@ -44,6 +45,8 @@ public class InventoryKeeper extends BasePlugin {
     private BukkitCommandManager commandManager;
     @Inject
     private InventoryKeeperCommands commands;
+    @Getter
+    private Metrics metrics;
 
     public InventoryKeeper() {
         registerInventoryFilters();
@@ -71,6 +74,8 @@ public class InventoryKeeper extends BasePlugin {
 
     @Override
     public void enable() {
+
+        registerBstats();
 
         commandManager = new BukkitCommandManager(this);
         commandManager.registerCommand(commands);
@@ -148,5 +153,9 @@ public class InventoryKeeper extends BasePlugin {
     private void createDefaultItemGroups() {
         DefaultItemCategories.getDefaultConfigs(new File(getDataFolder(), Constants.ITEM_GROUPS_CONFIG_PATH))
                 .forEach(YamlConfiguration::loadAndSave);
+    }
+
+    private void registerBstats() {
+        metrics = new Metrics(this, Constants.BSTATS_ID);
     }
 }

@@ -11,6 +11,7 @@ import net.silthus.inventorykeeper.config.InventoryConfig;
 import net.silthus.inventorykeeper.config.ItemGroupConfig;
 import net.silthus.slib.config.ConfigUtil;
 import net.silthus.slib.config.Configured;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -61,6 +62,9 @@ public class InventoryManager {
         ConfigUtil.loadRecursiveConfigs(plugin, Constants.INVENTORY_CONFIG_PATH, InventoryConfig.class, this::loadInventoryConfig);
 
         loadInventoryFilter();
+
+        registerPermissions();
+        registerBstats();
     }
 
     public void unload() {
@@ -77,6 +81,21 @@ public class InventoryManager {
         for (String key : inventoryFilters.keySet()) {
             registerDefaultPermission(key);
         }
+    }
+
+    private void registerBstats() {
+
+        // Optional: Add custom charts
+        getPlugin().getMetrics().addCustomChart(new Metrics.SimplePie(Constants.Charts.COMBINATION_MODE, () -> getConfig().getFilterMode().name()));
+        getPlugin().getMetrics().addCustomChart(new Metrics.AdvancedPie(Constants.Charts.CONFIG_MODE, () -> {
+            HashMap<String, Integer> configModes = new HashMap<>();
+            for (InventoryConfig config : getInventoryConfigs().values()) {
+                configModes.put(config.getMode(), configModes.getOrDefault(config.getMode(), 0) + 1);
+            }
+            return configModes;
+        }));
+        getPlugin().getMetrics().addCustomChart(new Metrics.SingleLineChart(Constants.Charts.LOADED_CONFIG_AMOUNT, () -> getInventoryConfigs().size()));
+        getPlugin().getMetrics().addCustomChart(new Metrics.SingleLineChart(Constants.Charts.LOADED_ITEM_GROUP_AMOUNT, () -> getItemGroupConfigs().size()));
     }
 
     private void registerDefaultPermission(String key) {

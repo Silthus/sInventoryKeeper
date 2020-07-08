@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import net.silthus.inventorykeeper.api.FilterResult;
 import net.silthus.slib.util.EnumUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -19,7 +20,7 @@ public class PluginConfig {
     }
 
     public FilterResult.CleanupMode getFilterMode() {
-        return EnumUtils.getEnumFromString(FilterResult.CleanupMode.class, getConfiguration().getString("combination_mode"));
+        return EnumUtils.getEnumFromString(FilterResult.CleanupMode.class, getConfiguration().getString("combination_mode", FilterResult.CleanupMode.KEEP_ITEMS.name()));
     }
 
     public class Messages {
@@ -33,11 +34,15 @@ public class PluginConfig {
         }
 
         public String getKeepItemsMessage() {
-            return getConfiguration().getString("on_death_keep_items");
+            return getConfiguration().getString("on_death_keep_items", "&eThe force is with you and you got to keep some of your items.");
         }
 
         public String getDropAllMessage() {
-            return getConfiguration().getString("on_death_drop_all");
+            return getConfiguration().getString("on_death_drop_all", "");
+        }
+
+        public String getKeepAllmessage() {
+            return getConfiguration().getString("on_death_keep_all", "&aYou got to keep all of your items.");
         }
     }
 }

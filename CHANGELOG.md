@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/Silthus/sInventoryKeeper/compare/v3.0.0...v3.0.1) (2020-07-08)
+
+
+### Bug Fixes
+
+* register permissions to enable 'op' features ([b076c3c](https://github.com/Silthus/sInventoryKeeper/commit/b076c3c0817ff7b7bba8316b33981c50e92a991c))
+
 # [3.0.0](https://github.com/Silthus/sInventoryKeeper/compare/v2.1.0...v3.0.0) (2020-07-08)
 
 

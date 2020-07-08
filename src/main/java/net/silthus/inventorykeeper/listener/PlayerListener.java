@@ -3,8 +3,10 @@ package net.silthus.inventorykeeper.listener;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import lombok.Getter;
+import net.silthus.inventorykeeper.Constants;
 import net.silthus.inventorykeeper.FilterException;
 import net.silthus.inventorykeeper.InventoryManager;
+import net.silthus.inventorykeeper.PluginConfig;
 import net.silthus.inventorykeeper.api.FilterResult;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -30,8 +32,19 @@ public class PlayerListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onDeath(PlayerDeathEvent event) {
 
+        Player player = event.getEntity();
+        PluginConfig.Messages messages = getInventoryManager().getConfig().getMessages();
+
+        if (player.hasPermission(Constants.KEEP_ALL_ITEMS)) {
+            event.setKeepInventory(true);
+            event.getDrops().clear();
+            if (!Strings.isNullOrEmpty(messages.getKeepAllmessage())) {
+                player.sendMessage(messages.getKeepAllmessage());
+            }
+            return;
+        }
+
         try {
-            Player player = event.getEntity();
             ItemStack[] inventoryItems = player.getInventory().getStorageContents();
             ItemStack[] extraContents = player.getInventory().getExtraContents();
             ItemStack[] armorContents = player.getInventory().getArmorContents();
@@ -42,7 +55,7 @@ public class PlayerListener implements Listener {
 
             if (!inventoryResult.isKeepingItems() && !extraResult.isKeepingItems() && !armorResult.isKeepingItems()) {
                 event.setKeepInventory(false);
-                String dropAllMessage = getInventoryManager().getConfig().getMessages().getDropAllMessage();
+                String dropAllMessage = messages.getDropAllMessage();
                 if (!Strings.isNullOrEmpty(dropAllMessage)) {
                     player.sendMessage(dropAllMessage);
                 }
@@ -58,7 +71,7 @@ public class PlayerListener implements Listener {
                 player.getInventory().setExtraContents(extraResult.getKeptItems());
                 player.getInventory().setArmorContents(armorResult.getKeptItems());
 
-                String keepItemsMessage = getInventoryManager().getConfig().getMessages().getKeepItemsMessage();
+                String keepItemsMessage = messages.getKeepItemsMessage();
                 if (!Strings.isNullOrEmpty(keepItemsMessage)) {
                     player.sendMessage(keepItemsMessage);
                 }

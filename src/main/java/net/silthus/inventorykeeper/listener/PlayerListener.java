@@ -33,9 +33,13 @@ public class PlayerListener implements Listener {
     public void onDeath(PlayerDeathEvent event) {
 
         Player player = event.getEntity();
-        PluginConfig.Messages messages = getInventoryManager().getConfig().getMessages();
+        PluginConfig config = getInventoryManager().getConfig();
+        PluginConfig.Messages messages = config.getMessages();
 
-        if (player.hasPermission(Constants.KEEP_ALL_ITEMS)) {
+        if (player.isOp() && config.isIgnoringOp()) return;
+        if (player.hasPermission(Constants.BYPASS_ON_DEATH)) return;
+
+        if (player.hasPermission(Constants.KEEP_ALL_ITEMS) ||(player.isOp() && config.isOpKeepingAll())) {
             event.setKeepInventory(true);
             event.getDrops().clear();
             if (!Strings.isNullOrEmpty(messages.getKeepAllmessage())) {

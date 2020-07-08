@@ -2,6 +2,12 @@
 # KEEP_ITEMS: in this mode any items that are kept by and of your config will be kept and all other items are dropped
 # DROP_ITEMS: in this mode any items that should be dropped take precedence and are removed from the kept items of other configs
 combination_mode: "KEEP_ITEMS"
+# set this to true to ignore OPs and let them drop their inventory normally
+# setting this to false requires OPs to have explicit permissions set
+ignore_op: false
+# Set to false if ops should not keep all of their inventory by default
+op_keep_all: true
 messages:
   on_death_keep_items: "&eThe force is with you and you got to keep some of your items."
   on_death_drop_all: ""
+  on_death_keep_all: "&aYou got to keep all of your items."

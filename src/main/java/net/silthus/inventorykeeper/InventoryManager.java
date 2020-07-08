@@ -16,11 +16,16 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
 import javax.inject.Singleton;
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.bukkit.Bukkit.getServer;
 
 @Getter
 @EqualsAndHashCode(callSuper = false)
@@ -62,6 +67,30 @@ public class InventoryManager {
         itemGroupConfigs.clear();
         inventoryConfigs.clear();
         inventoryFilters.clear();
+    }
+
+    private void registerPermissions() {
+
+        registerDefaultPermission(Constants.KEEP_ALL_ITEMS);
+        registerDefaultPermission(Constants.BYPASS_ON_DEATH);
+
+        for (String key : inventoryFilters.keySet()) {
+            registerDefaultPermission(key);
+        }
+    }
+
+    private void registerDefaultPermission(String key) {
+        try {
+            // Create and register permission
+            Permission permission = new Permission(key, PermissionDefault.FALSE);
+            getServer().getPluginManager().addPermission(permission);
+        } catch (IllegalArgumentException e) {
+            // Permission already exists, ensure it has the correct PermissionDefault instead
+            Permission permission = getServer().getPluginManager().getPermission(key);
+            if (permission != null) {
+                permission.setDefault(PermissionDefault.FALSE);
+            }
+        }
     }
 
     private void loadInventoryFilter() {

@@ -120,10 +120,21 @@ items:
 - dirt
 ```
 
+#### Changes in v3.0.0
+
+You can now define how multiple filters of the same type should be handled in the `config.yaml` --> `combination_mode`.  
+This means you can define if overlapping items from the same `WHITELIST` or `BLACKLIST` config are dropped or kept.
+
+| Mode | Description |
+| ---- | ----------- |
+| `KEEP_ITEMS` (*default*) | In this mode any items that are kept by and of your config will be kept and all other items are dropped. |
+| `DROP_ITEMS` | In this mode any items that should be dropped take precedence and are removed from the kept items of other configs. |
+
 ---
 **IMPORTANT**  
 > `WHITELIST` and `BLACKLIST` filters cannot be combined. Players can only have multiple filters of the same type.
 ---
+
 
 ## Commands
 

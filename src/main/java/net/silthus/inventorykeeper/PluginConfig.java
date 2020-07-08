@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import net.silthus.inventorykeeper.api.FilterResult;
 import net.silthus.slib.util.EnumUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -21,6 +20,14 @@ public class PluginConfig {
 
     public FilterResult.CleanupMode getFilterMode() {
         return EnumUtils.getEnumFromString(FilterResult.CleanupMode.class, getConfiguration().getString("combination_mode", FilterResult.CleanupMode.KEEP_ITEMS.name()));
+    }
+
+    public boolean isIgnoringOp() {
+        return getConfiguration().getBoolean("ignore_op", false);
+    }
+
+    public boolean isOpKeepingAll() {
+        return getConfiguration().getBoolean("op_keep_all", true);
     }
 
     public class Messages {

@@ -54,6 +54,26 @@ This plugin **requires [sLib](https://github.com/Silthus/sLib)** which provides 
 There are two types of configs `item-groups` and `inventory-keeper-configs`. You technically don't need to define item groups and can just use the keeper configs.
 But to make your life easier it is adviced to **create common item groups** and reuse them inside the keeper configs.
 
+### config.yml
+
+There is a `config.yml` inside the root folder of the plugin where you can configure some global properties and customize the messages sent to players.
+
+```yaml
+# There are two modes that are relevant when you have multiple filters applied to the same player
+# KEEP_ITEMS: in this mode any items that are kept by and of your config will be kept and all other items are dropped
+# DROP_ITEMS: in this mode any items that should be dropped take precedence and are removed from the kept items of other configs
+combination_mode: "KEEP_ITEMS"
+# set this to true to ignore OPs and let them drop their inventory normally
+# setting this to false requires OPs to have explicit permissions set
+ignore_op: false
+# Set to false if ops should not keep all of their inventory by default
+op_keep_all: true
+messages:
+  on_death_keep_items: "&eThe force is with you and you got to keep some of your items."
+  on_death_drop_all: ""
+  on_death_keep_all: "&aYou got to keep all of your items."
+```
+
 ### Item Groups
 
 Item Groups are defined inside the `item-groups/` directory. You can find two examples (`weapons.yaml` and `armor.yaml`) and create more yourself.
@@ -135,6 +155,14 @@ This means you can define if overlapping items from the same `WHITELIST` or `BLA
 > `WHITELIST` and `BLACKLIST` filters cannot be combined. Players can only have multiple filters of the same type.
 ---
 
+## Permissions
+
+There are some utility permissions to allow players to keep all of their inventory or bypass all checks.
+
+| Permission | Description |
+| --------- | ----------- |
+| `sinventorykeeper.keep-all` | Players that have this permission get to keep all of their inventory. |
+| `sinventorykeeper.bypass` | Players with this permission bypass all other permissions they have and always drop all of their inventory. |
 
 ## Commands
 

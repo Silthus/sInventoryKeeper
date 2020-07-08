@@ -149,5 +149,4 @@ public class InventoryKeeper extends BasePlugin {
         DefaultItemCategories.getDefaultConfigs(new File(getDataFolder(), Constants.ITEM_GROUPS_CONFIG_PATH))
                 .forEach(YamlConfiguration::loadAndSave);
     }
-
 }

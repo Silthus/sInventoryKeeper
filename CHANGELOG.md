@@ -1,3 +1,24 @@
+# [3.0.0](https://github.com/Silthus/sInventoryKeeper/compare/v2.1.0...v3.0.0) (2020-07-08)
+
+
+### Bug Fixes
+
+* filter all inventory contents - including armor ([aae1123](https://github.com/Silthus/sInventoryKeeper/commit/aae11237de4d3228f01f729ec7d148a899609ba6)), closes [#6](https://github.com/Silthus/sInventoryKeeper/issues/6)
+* worn armor and shields are duplicated on death ([01c0187](https://github.com/Silthus/sInventoryKeeper/commit/01c018714dd187b7663bbaacd6319202ee19bef5)), closes [#6](https://github.com/Silthus/sInventoryKeeper/issues/6)
+
+
+### Features
+
+* add `sinventorykeeper.keep-all` permission that automatically keeps all items regardless of the config ([5135b42](https://github.com/Silthus/sInventoryKeeper/commit/5135b4258d76a73c73610d484fa5ade43b93954f)), closes [#2](https://github.com/Silthus/sInventoryKeeper/issues/2)
+* allow configuration of combination_mode and messages ([32c04e6](https://github.com/Silthus/sInventoryKeeper/commit/32c04e6443885b5a63f1ed839ba20340efce96cb)), closes [README.md#changes-in-v3](https://github.com/README.md/issues/changes-in-v3) [#3](https://github.com/Silthus/sInventoryKeeper/issues/3)
+* OPs now need permissions by default ([5d75747](https://github.com/Silthus/sInventoryKeeper/commit/5d757479cbb0c23146b826da7303bf289df8e3df)), closes [#2](https://github.com/Silthus/sInventoryKeeper/issues/2)
+
+
+### BREAKING CHANGES
+
+* OPs are no longer automatically ignored by the plugin. Set `ignore_op: true` inside the `config.yml` to revert this change.
+* players can only have one kind of a filter attached to them. All configs that apply to a single player must all be `WHITELIST` or `BLACKLIST`.
+
 # [2.1.0](https://github.com/Silthus/sInventoryKeeper/compare/v2.0.1...v2.1.0) (2020-06-25)
 
 

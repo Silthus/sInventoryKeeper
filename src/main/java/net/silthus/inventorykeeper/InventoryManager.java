@@ -34,7 +34,7 @@ public class InventoryManager {
     private final Map<String, InventoryFilter> inventoryFilters = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     @Getter
-    private PluginConfig config;
+    PluginConfig config;
 
     @Inject
     InventoryManager(InventoryKeeper plugin, Map<String, Provider<InventoryFilter>> filterTypes) {

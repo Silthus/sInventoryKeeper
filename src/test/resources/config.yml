@@ -1,0 +1,7 @@
+# There are two modes that are relevant when you have multiple filters applied to the same player
+# KEEP_ITEMS: in this mode any items that are kept by and of your config will be kept and all other items are dropped
+# DROP_ITEMS: in this mode any items that should be dropped take precedence and are removed from the kept items of other configs
+combination_mode: "KEEP_ITEMS"
+messages:
+  on_death_keep_items: "&eThe force is with you and you got to keep some of your items."
+  on_death_drop_all: ""

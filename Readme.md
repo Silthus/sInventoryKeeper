@@ -15,14 +15,17 @@ A Spigot plugin that enables you to let your players keep a selection of their i
 
 > This can be useful for servers that want their different donors to keep different parts of their inventory.
 
-- [Features](#features)
-- [Installation](#installation)
-  - [Dependencies](#dependencies)
-- [Configuration](#configuration)
-  - [Item Groups](#item-groups)
-  - [Inventory Keeper Configs](#inventory-keeper-configs)
-- [Commands](#commands)
-- [Developer API](#developer-api)
+* [Features](#features)
+* [Installation](#installation)
+  * [Dependencies](#dependencies)
+* [Configuration](#configuration)
+  * [config.yml](#configyml)
+  * [Item Groups](#item-groups)
+  * [Inventory Keeper Configs](#inventory-keeper-configs)
+    * [Changes in v3.0.0](#changes-in-v300)
+* [Permissions](#permissions)
+* [Commands](#commands)
+* [Developer API](#developer-api)
 
 ## Features
 
@@ -151,7 +154,7 @@ This means you can define if overlapping items from the same `WHITELIST` or `BLA
 | `DROP_ITEMS` | In this mode any items that should be dropped take precedence and are removed from the kept items of other configs. |
 
 ---
-**IMPORTANT**  
+**IMPORTANT** 
 > `WHITELIST` and `BLACKLIST` filters cannot be combined. Players can only have multiple filters of the same type.
 ---
 

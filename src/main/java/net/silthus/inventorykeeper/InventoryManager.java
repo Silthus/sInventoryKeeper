@@ -33,7 +33,8 @@ public class InventoryManager {
     private final Map<String, InventoryConfig> inventoryConfigs = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, InventoryFilter> inventoryFilters = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-    private FileConfiguration config;
+    @Getter
+    private PluginConfig config;
 
     @Inject
     InventoryManager(InventoryKeeper plugin, Map<String, Provider<InventoryFilter>> filterTypes) {
@@ -49,7 +50,7 @@ public class InventoryManager {
     public void load() {
 
         getPlugin().saveDefaultConfig();
-        this.config = getPlugin().getConfig();
+        this.config = new PluginConfig(getPlugin().getConfig());
 
         ConfigUtil.loadRecursiveConfigs(plugin, Constants.ITEM_GROUPS_CONFIG_PATH, ItemGroupConfig.class, this::loadItemGroupConfig);
         ConfigUtil.loadRecursiveConfigs(plugin, Constants.INVENTORY_CONFIG_PATH, InventoryConfig.class, this::loadInventoryConfig);
@@ -163,7 +164,7 @@ public class InventoryManager {
         FilterResult result = new FilterResult();
 
         for (InventoryFilter filter : filters) {
-            result = result.combine(filter.filter(items.clone())).cleanupDuplicates(FilterResult.CleanupMode.KEEP_ITEMS);
+            result = result.combine(filter.filter(items.clone())).cleanupDuplicates(getConfig().getFilterMode());
         }
 
         return result;

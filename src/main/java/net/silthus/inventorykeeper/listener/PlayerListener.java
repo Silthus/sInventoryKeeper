@@ -1,5 +1,6 @@
 package net.silthus.inventorykeeper.listener;
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import lombok.Getter;
 import net.silthus.inventorykeeper.FilterException;
@@ -41,6 +42,10 @@ public class PlayerListener implements Listener {
 
             if (!inventoryResult.isKeepingItems() && !extraResult.isKeepingItems() && !armorResult.isKeepingItems()) {
                 event.setKeepInventory(false);
+                String dropAllMessage = getInventoryManager().getConfig().getMessages().getDropAllMessage();
+                if (!Strings.isNullOrEmpty(dropAllMessage)) {
+                    player.sendMessage(dropAllMessage);
+                }
             } else {
                 event.setKeepInventory(true);
 
@@ -53,7 +58,10 @@ public class PlayerListener implements Listener {
                 player.getInventory().setExtraContents(extraResult.getKeptItems());
                 player.getInventory().setArmorContents(armorResult.getKeptItems());
 
-                player.sendMessage(ChatColor.YELLOW + "The force is with you and made you keep some items.");
+                String keepItemsMessage = getInventoryManager().getConfig().getMessages().getKeepItemsMessage();
+                if (!Strings.isNullOrEmpty(keepItemsMessage)) {
+                    player.sendMessage(keepItemsMessage);
+                }
             }
         } catch (FilterException e) {
             event.getEntity().sendMessage(ChatColor.RED + "Dropping all items and not applying filters: " + e.getMessage());

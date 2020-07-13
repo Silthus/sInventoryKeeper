@@ -1,3 +1,15 @@
+# [3.1.0](https://github.com/Silthus/sInventoryKeeper/compare/v3.0.1...v3.1.0) (2020-07-13)
+
+
+### Bug Fixes
+
+* startup error not finding bstats ([093f4db](https://github.com/Silthus/sInventoryKeeper/commit/093f4db8aab9992510b9fcd0d7f63b963d9f3983))
+
+
+### Features
+
+* drop sLib dependency and shade it directly ([49aaf2e](https://github.com/Silthus/sInventoryKeeper/commit/49aaf2e225f3c2332bff73154a88d8f7bc495407))
+
 ## [3.0.1](https://github.com/Silthus/sInventoryKeeper/compare/v3.0.0...v3.0.1) (2020-07-08)
 
 

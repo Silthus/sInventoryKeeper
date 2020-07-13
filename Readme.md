@@ -46,12 +46,6 @@ A Spigot plugin that enables you to let your players keep a selection of their i
 Get the [latest release](../../releases/latest) and drop it into your `plugins/` directory.
 Restart the server and take a look at the generated default configs inside the `sInventoryKeeper` plugin folder.
 
-### Dependencies
-
-This plugin **requires [sLib](https://github.com/Silthus/sLib)** which provides a lot of useful features and common functions for all of my plugins.
-
-> [Download sLib](https://github.com/Silthus/sLib/releases/latest) and drop it into your plugin directory.
-
 ## Configuration
 
 There are two types of configs `item-groups` and `inventory-keeper-configs`. You technically don't need to define item groups and can just use the keeper configs.

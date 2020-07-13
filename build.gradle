@@ -7,7 +7,7 @@ buildscript {
 
 plugins {
     id 'com.github.johnrengelman.shadow' version '6.0.0'
-    id 'kr.entree.spigradle' version '2.0.0'
+    id 'kr.entree.spigradle' version '2.0.1'
     id 'java'
     id 'idea'
     id 'jacoco'
@@ -32,8 +32,6 @@ spigot {
     authors = [project.property("author")]
     apiVersion = project.property("apiVersion")
     load = STARTUP
-    depends = ['sLib']
-    main = "net.silthus.inventorykeeper.InventoryKeeper"
 }
 
 compileJava {
@@ -107,11 +105,13 @@ shadowJar {
     classifier = ''
     dependencies {
         include(dependency('co.aikar:acf-bukkit:'))
-        include(dependency('org.bstats:bstats:'))
+        include(dependency('org.bstats:bstats-bukkit:'))
+        include(dependency('net.silthus:slib:'))
     }
     relocate 'co.aikar.commands', "${packageName}.acf"
     relocate 'co.aikar.locales', "${packageName}.locales"
     relocate 'org.bstats', "${packageName}.bstats"
+    relocate 'net.silthus.slib', "${packageName}.slib"
 }
 
 tasks.build.dependsOn(shadowJar)

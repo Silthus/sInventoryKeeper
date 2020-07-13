@@ -13,9 +13,7 @@ import net.silthus.slib.config.ConfigUtil;
 import net.silthus.slib.config.Configured;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
@@ -24,7 +22,6 @@ import javax.inject.Singleton;
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.bukkit.Bukkit.getServer;
 

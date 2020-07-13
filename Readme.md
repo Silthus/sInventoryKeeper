@@ -11,7 +11,7 @@
 
 ![sInventoryKeeper splash image](docs/img/sInventoryKeeper_splash_transparent.png)
 
-A Spigot plugin that enables you to let your players keep a selection of their inventory on death. You can create multiple configs and assign different permissions for each config.
+A Spigot plugin that enables you to let your players keep a selection of their inventory on death. You can create multiple configs and assign different permissions for each config. 
 
 > This can be useful for servers that want their different donors to keep different parts of their inventory.
 

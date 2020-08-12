@@ -1,3 +1,10 @@
+# [3.2.0](https://github.com/Silthus/sInventoryKeeper/compare/v3.1.0...v3.2.0) (2020-08-12)
+
+
+### Features
+
+* **deps:** bump spigot to 1.16.2 ([a4cf4f9](https://github.com/Silthus/sInventoryKeeper/commit/a4cf4f96e70e712970eae2688ca88b4371f66c3a))
+
 # [3.1.0](https://github.com/Silthus/sInventoryKeeper/compare/v3.0.1...v3.1.0) (2020-07-13)
 
 

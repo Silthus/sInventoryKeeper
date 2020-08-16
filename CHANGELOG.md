@@ -1,3 +1,10 @@
+## [3.2.1](https://github.com/Silthus/sInventoryKeeper/compare/v3.2.0...v3.2.1) (2020-08-16)
+
+
+### Bug Fixes
+
+* **deps:** correctly depend on slib and configlib ([5871173](https://github.com/Silthus/sInventoryKeeper/commit/587117379c539790346a2e64f1703c807a53fe23))
+
 # [3.2.0](https://github.com/Silthus/sInventoryKeeper/compare/v3.1.0...v3.2.0) (2020-08-12)
 
 

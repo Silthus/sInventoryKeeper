@@ -2,6 +2,7 @@ package net.silthus.inventorykeeper;
 
 import co.aikar.commands.BukkitCommandManager;
 import com.google.inject.Binder;
+import de.exlll.configlib.configs.yaml.YamlConfiguration;
 import kr.entree.spigradle.annotations.PluginMain;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,7 +18,6 @@ import net.silthus.inventorykeeper.injection.FilterDiscoveryModule;
 import net.silthus.inventorykeeper.injection.InventoryKeeperModule;
 import net.silthus.inventorykeeper.listener.PlayerListener;
 import net.silthus.slib.bukkit.BasePlugin;
-import net.silthus.slib.configlib.configs.yaml.YamlConfiguration;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -47,6 +47,7 @@ public class InventoryKeeper extends BasePlugin {
     private InventoryKeeperCommands commands;
     @Getter
     private Metrics metrics;
+    boolean enableBstats = true;
 
     public InventoryKeeper() {
         registerInventoryFilters();
@@ -56,6 +57,8 @@ public class InventoryKeeper extends BasePlugin {
             JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
         super(loader, description, dataFolder, file);
 
+        // system is under test
+        this.enableBstats = false;
         registerInventoryFilters();
     }
 
@@ -75,7 +78,7 @@ public class InventoryKeeper extends BasePlugin {
     @Override
     public void enable() {
 
-        registerBstats();
+        if (enableBstats) registerBstats();
 
         commandManager = new BukkitCommandManager(this);
         commandManager.registerCommand(commands);

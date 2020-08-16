@@ -9,7 +9,7 @@ import net.silthus.inventorykeeper.api.FilterResult;
 import net.silthus.inventorykeeper.api.InventoryFilter;
 import net.silthus.inventorykeeper.config.InventoryConfig;
 import net.silthus.inventorykeeper.config.ItemGroupConfig;
-import net.silthus.slib.config.ConfigUtil;
+import net.silthus.inventorykeeper.util.ConfigUtil;
 import net.silthus.slib.config.Configured;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Material;
@@ -81,6 +81,8 @@ public class InventoryManager {
     }
 
     private void registerBstats() {
+
+        if (!plugin.enableBstats) return;
 
         // Optional: Add custom charts
         getPlugin().getMetrics().addCustomChart(new Metrics.SimplePie(Constants.Charts.COMBINATION_MODE, () -> getConfig().getFilterMode().name()));

@@ -1,10 +1,10 @@
 package net.silthus.inventorykeeper.config;
 
+import de.exlll.configlib.annotation.Comment;
+import de.exlll.configlib.configs.yaml.BukkitYamlConfiguration;
+import de.exlll.configlib.format.FieldNameFormatters;
 import lombok.Getter;
 import lombok.Setter;
-import net.silthus.slib.configlib.annotation.Comment;
-import net.silthus.slib.configlib.configs.yaml.BukkitYamlConfiguration;
-import net.silthus.slib.configlib.format.FieldNameFormatters;
 import org.bukkit.Material;
 
 import java.nio.file.Path;

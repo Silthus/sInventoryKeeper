@@ -14,7 +14,6 @@ import net.silthus.inventorykeeper.mock.CustomServerMock;
 import org.apache.commons.lang.RandomStringUtils;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.bukkit.Material;
-import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;

@@ -1,3 +1,10 @@
+## [3.2.2](https://github.com/Silthus/sInventoryKeeper/compare/v3.2.1...v3.2.2) (2020-08-17)
+
+
+### Bug Fixes
+
+* **reps:** properly relocate dependencies ([45d43a1](https://github.com/Silthus/sInventoryKeeper/commit/45d43a1f5c862a13c5469c66a80725e7c495d7de)), closes [#10](https://github.com/Silthus/sInventoryKeeper/issues/10)
+
 ## [3.2.1](https://github.com/Silthus/sInventoryKeeper/compare/v3.2.0...v3.2.1) (2020-08-16)
 
 

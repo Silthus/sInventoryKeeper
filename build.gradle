@@ -95,6 +95,8 @@ shadowJar {
     relocate 'org.bstats', "${packageName}.bstats"
     relocate 'net.silthus.slib', "${packageName}.slib"
     relocate 'de.exlll.configlib', "${packageName}.configlib"
+    relocate 'com.netflix.governator', "${packageName}.governator"
+    relocate 'com.google.inject', "${packageName}.guice"
 }
 
 tasks.build.dependsOn(shadowJar)

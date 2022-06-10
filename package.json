@@ -11,7 +11,7 @@
     "husky": "4.2.5",
     "lint-staged": "10.2.2",
     "prettier": "2.0.5",
-    "semantic-release": "17.2.3"
+    "semantic-release": "19.0.3"
   },
   "scripts": {
     "semantic-release": "npx semantic-release"
